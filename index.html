@@ -101,6 +101,15 @@
             animation-duration: 5s;
         }
 
+        /* Estilos para el iframe del video */
+        .video-container {
+            display: none;
+            margin-top: 20px;
+        }
+        iframe {
+            width: 560px;
+            height: 315px;
+        }
     </style>
 </head>
 <body>
@@ -118,52 +127,44 @@
     <div class="tallo"></div>
 </div>
 
-<div class="container">
+<div class="container" id="countdownContainer">
     <div class="subtitle">Joss & Sebas</div> <!-- Texto agregado "Joss & Sebas" -->
     <h1>Falta para nuestro primer mes</h1>
     <div class="countdown">
         <div id="dias">0</div>
         <div id="horas">0</div>
         <div id="minutos">0</div>
-        <div id="segundos">0</div>
+        <div id="segundos">30 Segundos</div> <!-- La cuenta inicia en 30 segundos -->
     </div>
 </div>
 
+<!-- Contenedor del video de YouTube -->
+<div class="video-container" id="videoContainer">
+    <iframe src="https://www.youtube.com/embed/93puMDhX7xs" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+</div>
+
 <script>
-    // Verificar si ya hay una fecha límite guardada en localStorage
-    let fechaLimite = localStorage.getItem('fechaLimite');
+    // Configurar el tiempo de 30 segundos
+    let tiempoRestante = 30 * 1000; // 30 segundos en milisegundos
 
-    // Si no existe, calcularla (4 días desde ahora) y guardarla en localStorage
-    if (!fechaLimite) {
-        fechaLimite = new Date().getTime() + (4 * 24 * 60 * 60 * 1000); // 4 días en milisegundos
-        localStorage.setItem('fechaLimite', fechaLimite);
-    }
-
-    // Convertir la fecha de límite a número (milisegundos)
-    fechaLimite = parseInt(fechaLimite);
-
-    // Actualizar la cuenta regresiva cada segundo
     const intervalo = setInterval(() => {
-        const ahora = new Date().getTime();
-        const diferencia = fechaLimite - ahora;
+        tiempoRestante -= 1000; // Restar 1 segundo
 
-        // Cálculo de días, horas, minutos y segundos
-        const dias = Math.floor(diferencia / (1000 * 60 * 60 * 24));
-        const horas = Math.floor((diferencia % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-        const minutos = Math.floor((diferencia % (1000 * 60 * 60)) / (1000 * 60));
-        const segundos = Math.floor((diferencia % (1000 * 60)) / 1000);
+        // Cálculo de minutos y segundos
+        const minutos = Math.floor((tiempoRestante % (1000 * 60 * 60)) / (1000 * 60));
+        const segundos = Math.floor((tiempoRestante % (1000 * 60)) / 1000);
 
         // Mostrar el resultado en los respectivos elementos HTML
-        document.getElementById("dias").innerHTML = dias + " Días";
-        document.getElementById("horas").innerHTML = horas + " Horas";
-        document.getElementById("minutos").innerHTML = minutos + " Minutos";
+        document.getElementById("dias").style.display = "none";
+        document.getElementById("horas").style.display = "none";
+        document.getElementById("minutos").style.display = "none";
         document.getElementById("segundos").innerHTML = segundos + " Segundos";
 
-        // Si la cuenta ha llegado a 0, detener el intervalo y borrar la fecha de localStorage
-        if (diferencia < 0) {
+        // Si la cuenta ha llegado a 0, detener el intervalo y mostrar el video
+        if (tiempoRestante <= 0) {
             clearInterval(intervalo);
-            document.querySelector('.countdown').innerHTML = "¡Tiempo terminado!";
-            localStorage.removeItem('fechaLimite');
+            document.getElementById("countdownContainer").style.display = "none"; // Ocultar la cuenta regresiva
+            document.getElementById("videoContainer").style.display = "block"; // Mostrar el video
         }
     }, 1000);
 </script>
