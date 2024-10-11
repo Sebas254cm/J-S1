@@ -130,9 +130,17 @@
 </div>
 
 <script>
-    // Tiempo final en 25 minutos desde ahora
-    const ahora = new Date().getTime();
-    const fechaLimite = ahora + (25 * 60 * 1000); // 25 minutos en milisegundos
+    // Verificar si ya hay una fecha límite guardada en localStorage
+    let fechaLimite = localStorage.getItem('fechaLimite');
+
+    // Si no existe, calcularla (25 minutos desde ahora) y guardarla en localStorage
+    if (!fechaLimite) {
+        fechaLimite = new Date().getTime() + (25 * 60 * 1000); // 25 minutos en milisegundos
+        localStorage.setItem('fechaLimite', fechaLimite);
+    }
+
+    // Convertir la fecha de límite a número (milisegundos)
+    fechaLimite = parseInt(fechaLimite);
 
     // Actualizar la cuenta regresiva cada segundo
     const intervalo = setInterval(() => {
@@ -156,6 +164,9 @@
             // Reproducir el video automáticamente agregando 'autoplay=1'
             const videoIframe = document.getElementById("videoIframe");
             videoIframe.src = "https://www.youtube.com/embed/93puMDhX7xs?autoplay=1";
+
+            // Borrar la fecha límite de localStorage para que no se repita
+            localStorage.removeItem('fechaLimite');
         }
     }, 1000);
 </script>
