@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Cuenta Regresiva</title>
+    <title>Joss&Sebas</title>
     <link rel="icon" href="corazon.png" type="image/png"> <!-- Ícono del corazón -->
     <style>
         body {
@@ -25,6 +25,7 @@
             border-radius: 10px;
             box-shadow: 0 0 15px rgba(0, 0, 0, 0.3);
             z-index: 1;
+            position: relative;
         }
         h1 {
             font-size: 2.5em;
@@ -40,65 +41,59 @@
         .countdown div {
             margin: 10px 0;
         }
-
-        /* Girasoles plantados */
-        .girasol {
+        /* Estilos para los corazones */
+        .heart {
             position: absolute;
-            bottom: 10px;
-            width: 80px;
-            height: 150px;
-            left: calc(50% - 40px); /* Centrado horizontalmente */
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            animation: swaying 3s ease-in-out infinite;
-        }
-        .tallo {
-            width: 10px;
-            height: 100px;
-            background-color: green;
-            position: relative;
-        }
-        .flor {
-            width: 80px;
-            height: 80px;
-            background-color: yellow;
-            border-radius: 50%;
-            position: relative;
-        }
-        .flor::before {
-            content: "";
             width: 50px;
             height: 50px;
-            background-color: brown;
-            border-radius: 50%;
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
+            background-color: red;
+            transform: rotate(-45deg);
+            top: 100%;
+            animation: float 6s infinite;
+            z-index: 0;
         }
-
-        /* Animación de viento */
-        @keyframes swaying {
+        .heart::before,
+        .heart::after {
+            content: "";
+            position: absolute;
+            width: 50px;
+            height: 50px;
+            background-color: red;
+            border-radius: 50%;
+        }
+        .heart::before {
+            top: -25px;
+            left: 0;
+        }
+        .heart::after {
+            left: 25px;
+            top: 0;
+        }
+        /* Animación de los corazones flotantes */
+        @keyframes float {
             0% {
-                transform: rotate(0deg);
-            }
-            50% {
-                transform: rotate(5deg);
+                transform: translateY(0) rotate(-45deg);
+                opacity: 1;
             }
             100% {
-                transform: rotate(0deg);
+                transform: translateY(-100vh) rotate(-45deg);
+                opacity: 0;
             }
         }
-
-        /* Varias posiciones de girasoles */
-        .girasol:nth-child(2) {
+        /* Diferentes tamaños y posiciones de los corazones */
+        .heart:nth-child(2) {
             left: 20%;
-            animation-duration: 4s;
+            animation-duration: 8s;
         }
-        .girasol:nth-child(3) {
+        .heart:nth-child(3) {
+            left: 50%;
+            animation-duration: 10s;
+            animation-delay: 2s;
+        }
+        .heart:nth-child(4) {
             left: 80%;
-            animation-duration: 5s;
+            animation-duration: 7s;
+            animation-delay: 1s;
         }
 
         /* Estilos para el iframe del video */
@@ -114,57 +109,70 @@
 </head>
 <body>
 
-<div class="girasol">
-    <div class="flor"></div>
-    <div class="tallo"></div>
-</div>
-<div class="girasol">
-    <div class="flor"></div>
-    <div class="tallo"></div>
-</div>
-<div class="girasol">
-    <div class="flor"></div>
-    <div class="tallo"></div>
-</div>
+<!-- Corazones flotantes -->
+<div class="heart"></div>
+<div class="heart"></div>
+<div class="heart"></div>
+<div class="heart"></div>
 
 <div class="container" id="countdownContainer">
     <div class="subtitle">Joss & Sebas</div> <!-- Texto agregado "Joss & Sebas" -->
     <h1>Falta para nuestro primer mes</h1>
     <div class="countdown">
-        <div id="dias">0</div>
-        <div id="horas">0</div>
-        <div id="minutos">0</div>
-        <div id="segundos">30 Segundos</div> <!-- La cuenta inicia en 30 segundos -->
+        <div id="dias"></div>
+        <div id="horas"></div>
+        <div id="minutos"></div>
+        <div id="segundos"></div>
     </div>
 </div>
 
 <!-- Contenedor del video de YouTube -->
 <div class="video-container" id="videoContainer">
-    <iframe id="youtubeVideo" src="https://www.youtube.com/embed/93puMDhX7xs?autoplay=1" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+    <iframe id="videoIframe" src="" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
 </div>
 
 <script>
-    // Configurar el tiempo de 30 segundos
-    let tiempoRestante = 30 * 1000; // 30 segundos en milisegundos
+    // Verificar si ya hay una fecha límite guardada en localStorage
+    let fechaLimite = localStorage.getItem('fechaLimite');
 
+    // Si no existe, calcularla (4 días desde ahora) y guardarla en localStorage
+    if (!fechaLimite) {
+        fechaLimite = new Date().getTime() + (4 * 24 * 60 * 60 * 1000); // 4 días en milisegundos
+        localStorage.setItem('fechaLimite', fechaLimite);
+    }
+
+    // Convertir la fecha de límite a número (milisegundos)
+    fechaLimite = parseInt(fechaLimite);
+
+    // Actualizar la cuenta regresiva cada segundo
     const intervalo = setInterval(() => {
-        tiempoRestante -= 1000; // Restar 1 segundo
+        const ahora = new Date().getTime();
+        const diferencia = fechaLimite - ahora;
 
-        // Cálculo de minutos y segundos
-        const minutos = Math.floor((tiempoRestante % (1000 * 60 * 60)) / (1000 * 60));
-        const segundos = Math.floor((tiempoRestante % (1000 * 60)) / 1000);
+        // Cálculo de días, horas, minutos y segundos
+        const dias = Math.floor(diferencia / (1000 * 60 * 60 * 24));
+        const horas = Math.floor((diferencia % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+        const minutos = Math.floor((diferencia % (1000 * 60 * 60)) / (1000 * 60));
+        const segundos = Math.floor((diferencia % (1000 * 60)) / 1000);
 
         // Mostrar el resultado en los respectivos elementos HTML
-        document.getElementById("dias").style.display = "none";
-        document.getElementById("horas").style.display = "none";
-        document.getElementById("minutos").style.display = "none";
+        document.getElementById("dias").innerHTML = dias > 0 ? dias + " Días" : "";
+        document.getElementById("horas").innerHTML = horas > 0 ? horas + " Horas" : "";
+        document.getElementById("minutos").innerHTML = minutos > 0 ? minutos + " Minutos" : "";
         document.getElementById("segundos").innerHTML = segundos + " Segundos";
 
         // Si la cuenta ha llegado a 0, detener el intervalo y mostrar el video
-        if (tiempoRestante <= 0) {
+        if (diferencia <= 0) {
             clearInterval(intervalo);
             document.getElementById("countdownContainer").style.display = "none"; // Ocultar la cuenta regresiva
             document.getElementById("videoContainer").style.display = "block"; // Mostrar el video
+
+            // Reproducir el video automáticamente agregando 'autoplay=1'
+            const videoIframe = document.getElementById("videoIframe");
+            videoIframe.src = "https://www.youtube.com/embed/93puMDhX7xs?autoplay=1";
+
+            // Eliminar la fecha límite del almacenamiento local
+            localStorage.removeItem('fechaLimite');
         }
     }, 1000);
 </script>
