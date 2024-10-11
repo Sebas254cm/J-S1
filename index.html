@@ -137,7 +137,8 @@
 
     // Si no existe, calcularla (4 días desde ahora) y guardarla en localStorage
     if (!fechaLimite) {
-        fechaLimite = new Date().getTime() + (4 * 24 * 60 * 60 * 1000); // 4 días en milisegundos
+        // Restar una hora (3600000 ms) para corregir la hora adelantada
+        fechaLimite = new Date().getTime() + (4 * 24 * 60 * 60 * 1000) - 3600000; // 4 días menos 1 hora en milisegundos
         localStorage.setItem('fechaLimite', fechaLimite);
     }
 
