@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Joss&Sebas</title>
+    <title>Joss & Sebas</title>
     <link rel="icon" href="corazon.png" type="image/png"> <!-- Ícono del corazón -->
     <style>
         body {
@@ -80,6 +80,22 @@
                 opacity: 0;
             }
         }
+        /* Diferentes tamaños y posiciones de los corazones */
+        .heart:nth-child(2) {
+            left: 20%;
+            animation-duration: 8s;
+        }
+        .heart:nth-child(3) {
+            left: 50%;
+            animation-duration: 10s;
+            animation-delay: 2s;
+        }
+        .heart:nth-child(4) {
+            left: 80%;
+            animation-duration: 7s;
+            animation-delay: 1s;
+        }
+
         /* Estilos para el iframe del video */
         .video-container {
             display: none;
@@ -114,22 +130,25 @@
 </div>
 
 <script>
-    // Obtener la hora actual
-    const ahora = new Date();
+    // Duración de la cuenta regresiva en segundos (19 minutos)
+    const countdownDuration = 19 * 60; // 19 minutos en segundos
 
-    // Fecha límite es 25 minutos desde el momento actual
+    // Verificar si ya hay una fecha límite guardada en localStorage
     let fechaLimite = localStorage.getItem('fechaLimite');
-    if (!fechaLimite || new Date(fechaLimite) < ahora) {
-        fechaLimite = new Date(ahora.getTime() + 25 * 60 * 1000); // 25 minutos desde ahora
+
+    // Si no existe, calcularla y guardarla en localStorage
+    if (!fechaLimite) {
+        fechaLimite = new Date().getTime() + (countdownDuration * 1000); // 19 minutos en milisegundos
         localStorage.setItem('fechaLimite', fechaLimite);
-    } else {
-        fechaLimite = new Date(fechaLimite);
     }
+
+    // Convertir la fecha de límite a número (milisegundos)
+    fechaLimite = parseInt(fechaLimite);
 
     // Actualizar la cuenta regresiva cada segundo
     const intervalo = setInterval(() => {
         const ahora = new Date().getTime();
-        const diferencia = fechaLimite.getTime() - ahora;
+        const diferencia = fechaLimite - ahora;
 
         // Cálculo de minutos y segundos
         const minutos = Math.floor((diferencia % (1000 * 60 * 60)) / (1000 * 60));
@@ -147,9 +166,9 @@
 
             // Reproducir el video automáticamente agregando 'autoplay=1'
             const videoIframe = document.getElementById("videoIframe");
-            videoIframe.src = "https://www.youtube.com/embed/93puMDhX7xs?autoplay=1";
+            videoIframe.src = "https://www.youtube.com/embed/G-lI_p0pNiU?autoplay=1";
 
-            // Borrar la fecha límite de localStorage para que no se repita
+            // Eliminar la fecha límite del almacenamiento local
             localStorage.removeItem('fechaLimite');
         }
     }, 1000);
