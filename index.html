@@ -135,7 +135,7 @@
 
     // Si no existe, calcularla (25 minutos desde ahora) y guardarla en localStorage
     if (!fechaLimite) {
-        fechaLimite = new Date().getTime() + (25 * 60 * 1000); // 25 minutos en milisegundos
+        fechaLimite = new Date().getTime() + (28 * 60 * 1000); // 25 minutos en milisegundos
         localStorage.setItem('fechaLimite', fechaLimite);
     }
 
