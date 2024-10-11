@@ -132,13 +132,20 @@
 </div>
 
 <script>
+    // Función para obtener la próxima medianoche (12:00 AM) después de 4 días
+    function obtenerFechaLimite() {
+        const ahora = new Date();
+        // Crear una nueva fecha con el mismo día, pero a las 12:00 AM
+        const fechaLimite = new Date(ahora.getFullYear(), ahora.getMonth(), ahora.getDate() + 4);
+        return fechaLimite.getTime(); // Obtener el tiempo en milisegundos
+    }
+
     // Verificar si ya hay una fecha límite guardada en localStorage
     let fechaLimite = localStorage.getItem('fechaLimite');
 
-    // Si no existe, calcularla (4 días desde ahora) y guardarla en localStorage
+    // Si no existe, calcularla y guardarla en localStorage
     if (!fechaLimite) {
-        // Restar una hora (3600000 ms) para corregir la hora adelantada
-        fechaLimite = new Date().getTime() + (4 * 24 * 60 * 60 * 1000) - 3600000; // 4 días menos 1 hora en milisegundos
+        fechaLimite = obtenerFechaLimite();
         localStorage.setItem('fechaLimite', fechaLimite);
     }
 
